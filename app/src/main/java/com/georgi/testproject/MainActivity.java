@@ -19,13 +19,18 @@ public class MainActivity extends AppCompatActivity {
     private int _annoyedIfYes;
     private int _annoyedIfNo;
 
-    private boolean question0020;   // Do you have friends
+    private boolean question0020;// Do you have friends
+    private boolean question0030;
+    private boolean question0040;
+    private boolean question0050;
 
     private TextView textView;
     private ConstraintLayout yesnolayout;
     private Button buttonyes;
     private Button buttonno;
     private Button button3;
+    private Button buttonhidden1;
+    private TextView button3overlay;
     private ProgressBar annoyed;
     private TextView annoyedText;
 
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         buttonyes = (Button) findViewById(R.id.buttonyes);
         buttonno = (Button) findViewById(R.id.buttonno);
         button3 = (Button) findViewById(R.id.button3);
+        buttonhidden1 = (Button) findViewById(R.id.buttonhidden1);
+        button3overlay = (TextView) findViewById(R.id.button3overlay);
         annoyed = (ProgressBar) findViewById(R.id.annoyed);
         annoyedText = (TextView) findViewById(R.id.annoyedText);
     }
@@ -54,8 +61,18 @@ public class MainActivity extends AppCompatActivity {
         _responseIfNo = responseIfNo;
         _annoyedIfYes = annoyedIfYes;
         _annoyedIfNo = annoyedIfNo;
+
     }
 
+    private void annoy(int annoyance) {
+        annoyed.setVisibility(View.VISIBLE);
+        annoyedText.setVisibility(View.VISIBLE);
+        annoyed.setProgress(annoyed.getProgress() + annoyance);
+        annoyedText.setText(annoyed.getProgress() + "% Annoyed");
+        float percent = 1.f - annoyed.getProgress() / 100f;
+        annoyed.getProgressDrawable().setColorFilter(
+                Color.HSVToColor(new float[]{256f / 3f * percent, 1f, 0.7f}), android.graphics.PorterDuff.Mode.SRC_IN);
+    }
     public void sendmessage(View view) {
         clickCount++;
 
@@ -126,46 +143,135 @@ public class MainActivity extends AppCompatActivity {
                 question(
                         "So if you do have friends, you won't need me, won't you?",
 
-                        "Forever will I admire the holy button3.",
-                        "The button3 is but a minor part of my existence.",
+                        "I actually won't. No idea what I'm doing here.",
+                        "What are you talking about? I can be friends with a robot.",
 
-                        "Kneel before me, peasant.",
-                        "Do you wish for a <i>particularly</i> painful death?",
+                        "Then go. I'm not stopping you. I could, though...",
+                        "<b>I am not a mere <i>robot</i>! I am a deity far above any human cognition!</b>",
 
-                        -5,
+                        5,
+                        20
+                );
+            }
+        } else if (clickCount == 40) {
+            question0030 = lastAnswered;
+
+            if (question0020 == false && question0030 == false) {
+                question(
+                        "You called me a robot. I now officially hate you.",
+
+                        "Feeling's mutual, mate.",
+                        "I'm sorry! I should have never angered the mighty button3!",
+
+                        "You're not allowed to hate a <b>god</b>. Who do you think you are?",
+                        "That's what I like to hear.",
+
+                        10,
+                        -5
+                );
+            }
+            if (question0020 == false && question0030 == true) {
+                question(
+                        "So why haven't you gone yet? I have slaves to tend to. Unless you want to become one of them.",
+
+                        "Why would such a powerful deity like yourself have the need for slaves?",
+                        "I find it amusing watching you rant like a mere human.",
+
+                        "Amusement.",
+                        "I don't rant, I contemplate. And I'll pretend I didn't hear that. 'Mere humans' would have been blasted for such blasphemy. You're lucky I like you.",
+
+                        0,
+                        15
+                );
+            }
+            if (question0020 == true && question0030 == true) {
+                question(
+                        "If you like me so much, how would you like becoming one of my personal slaves?",
+
+                        "Why would such a powerful deity like yourself have the need for slaves?",
+                        "Meh. I'll pass",
+
+                        "Amusement.",
+                        "Well then. If you say so.",
+
+                        0,
+                        5
+                );
+            }
+            if (question0020 == true && question0030 == false) {
+                question(
+                        "If you're saying stuff like that, I might as well make you one of my slaves",
+
+                        "Why would such a powerful deity like yourself have the need for slaves?",
+                        "Meh. I'll pass",
+
+                        "Amusement.",
+                        "Okay. I'll just get you in your sleep.",
+
+                        0,
                         10
                 );
             }
-        }
+        } else if (clickCount == 50) {
+            question(
+                    "Annoy me any more, and I'll make myself invisible for your inferior mind.",
 
+                    "I think you're the inferior mind here.",
+                    "Please don't leave me, button-senpai!",
+
+                    "And like that, button3 vanished into the void of darkness, never to be perceived again by mortal eyes.",
+                    "And like that, button3 vanished into the void of darkness, never to be perceived again by mortal eyes.",
+
+                    12,
+                    -3
+            );
+        } else if (clickCount == 51) {
+            annoy(10);
+            question(
+                    "THAT WAS NOT SUPPOSED TO HAPPEN. MORTALS CANNOT PERCEIVE MY UNSEEN HAND.",
+
+                    "Are you getting annoyed? (▀̿Ĺ̯▀̿ ̿)",
+                    "*taunt*",
+
+                    "Yes, I am. Sustain that behaviour, and you're sure to experience an incredibly painful death.",
+                    "What did you say about my mother?! I'll have you blasted for that.",
+
+                    12,
+                    15
+            );
+        }
     }
 
     public void buttonyespressed(View view) {
         lastAnswered = true;
-        button3.setEnabled(true);
-        yesnolayout.setVisibility(View.INVISIBLE);
         button3.setText(Html.fromHtml(_responseIfYes));
-        annoyed.setProgress(annoyed.getProgress() + _annoyedIfYes);
-        annoyed.setVisibility(View.VISIBLE);
-        annoyedText.setVisibility(View.VISIBLE);
-        annoyedText.setText(annoyed.getProgress() + "% Annoyed");
-        float percent = 1.f - annoyed.getProgress() / 100f;
-        annoyed.getProgressDrawable().setColorFilter(
-                Color.HSVToColor(new float[]{256f / 3f * percent, 1f, 0.7f}), android.graphics.PorterDuff.Mode.SRC_IN);
+        annoy(_annoyedIfYes);
+        buttonYesNoPress();
     }
 
     public void buttonnopressed(View view) {
         lastAnswered = false;
+        button3.setText(Html.fromHtml(_responseIfNo));
+        annoy(_annoyedIfNo);
+        buttonYesNoPress();
+    }
+
+    private void buttonYesNoPress() {
         button3.setEnabled(true);
         yesnolayout.setVisibility(View.INVISIBLE);
-        button3.setText(Html.fromHtml(_responseIfNo));
-        annoyed.setProgress(annoyed.getProgress() + _annoyedIfNo);
-        annoyed.setVisibility(View.VISIBLE);
-        annoyedText.setVisibility(View.VISIBLE);
-        annoyedText.setText(annoyed.getProgress() + "% Annoyed");
-        float percent = 1.f - annoyed.getProgress() / 100f;
-        annoyed.getProgressDrawable().setColorFilter(
-                Color.HSVToColor(new float[]{256f / 3f * percent, 1f, 0.7f}), android.graphics.PorterDuff.Mode.SRC_IN);
+        if (clickCount == 50) {
+            button3.setVisibility(View.INVISIBLE);
+            button3overlay.setVisibility(View.VISIBLE);
+            buttonhidden1.setVisibility(View.VISIBLE);
+            button3overlay.setText("And like that, button3 vanished into the void of darkness, never to be perceived again by mortal eyes.");
+        }
+    }
+
+    public void buttonhiddenpressed(View view) {
+        button3.setVisibility(View.VISIBLE);
+        buttonhidden1.setVisibility(View.INVISIBLE);
+        button3overlay.setVisibility(View.INVISIBLE);
+        sendmessage(view);
     }
 }
 
