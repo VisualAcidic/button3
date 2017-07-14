@@ -2,9 +2,11 @@ package com.georgi.testproject;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -18,11 +20,16 @@ public class MainActivity extends AppCompatActivity {
     private String _responseIfNo;
     private int _annoyedIfYes;
     private int _annoyedIfNo;
+    private boolean direction = true;
+    private int distance;
+    private int width;
+
 
     private boolean question0020;// Do you have friends
     private boolean question0030;
     private boolean question0040;
     private boolean question0050;
+
 
     private TextView textView;
     private ConstraintLayout yesnolayout;
@@ -37,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         textView = (TextView) findViewById(R.id.textView);
         yesnolayout = (ConstraintLayout) findViewById(R.id.yesnolayout);
@@ -49,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         button3overlay = (TextView) findViewById(R.id.button3overlay);
         annoyed = (ProgressBar) findViewById(R.id.annoyed);
         annoyedText = (TextView) findViewById(R.id.annoyedText);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        width = displayMetrics.widthPixels;
+        distance = button3.getWidth();
+
     }
 
     private void question(String text, String yes, String no, String responseIfYes, String responseIfNo, int annoyedIfYes, int annoyedIfNo) {
@@ -239,7 +254,54 @@ public class MainActivity extends AppCompatActivity {
                     12,
                     15
             );
+        } else if (clickCount == 60) {
+            button3.setText("Catch me!");
+
+            buttonMove();
+        } else if (clickCount == 61) {
+            question(
+                    "THAT WAS NOT SUPPOSED TO HAPPEN. MORTALS CANNOT PERCEIVE MY UNSEEN HAND.",
+
+                    "Are you getting annoyed? (▀̿Ĺ̯▀̿ ̿)",
+                    "*taunt*",
+
+                    "Yes, I am. Sustain that behaviour, and you're sure to experience an incredibly painful death.",
+                    "What did you say about my mother?! I'll have you blasted for that.",
+
+                    12,
+                    15
+            );
         }
+
+    }
+
+    private void buttonMove() {
+        Handler h = new Handler();
+        h.postDelayed(new Runnable() {
+
+
+            public void run() {
+//change your text here
+                annoyedText.setText(width + " " + button3.getX() + " " + Boolean.toString(direction) + " " + distance);
+                distance = button3.getWidth();
+                if (button3.getX() <= 0f) {
+                    direction = false;
+                }
+                if (button3.getX() >= (float) width - distance) {
+                    direction = true;
+                }
+                if (direction == true) {
+                    button3.setX(button3.getX() - 20);
+                }
+                if (direction == false) {
+                    button3.setX(button3.getX() + 20);
+                }
+
+                if (clickCount == 60) {
+                    buttonMove();
+                }
+            }
+        }, 30);
     }
 
     public void buttonyespressed(View view) {
